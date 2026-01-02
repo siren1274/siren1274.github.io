@@ -7,19 +7,15 @@ interface HeaderProps {
   cartItemsCount: number;
   onCartClick: () => void;
   onSearchChange: (query: string) => void;
-  onNavigate?: (page: string) => void;
-  currentPage?: string;
 }
 
-export function Header({ cartItemsCount, onCartClick, onSearchChange, onNavigate, currentPage = 'home' }: HeaderProps) {
+export function Header({ cartItemsCount, onCartClick, onSearchChange }: HeaderProps) {
   return (
     <header className="border-2 border-[#C1CFD6] sticky top-0 bg-[#2E2E4E] z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between gap-4">
           {/* Logo */}
-          <div onClick={() => onNavigate?.('home')} className="cursor-pointer">
-            <Logo />
-          </div>
+          <Logo />
 
           {/* Search Bar */}
           <div className="hidden md:flex flex-1 max-w-xl relative">
@@ -34,34 +30,10 @@ export function Header({ cartItemsCount, onCartClick, onSearchChange, onNavigate
 
           {/* Navigation */}
           <nav className="hidden lg:flex items-center gap-6">
-            <a 
-              onClick={(e) => { e.preventDefault(); onNavigate?.('home'); }} 
-              href="#" 
-              className={`hover:text-white transition-colors border-b-2 ${currentPage === 'home' ? 'text-white border-[#C1CFD6]' : 'text-[#C1CFD6] border-transparent hover:border-[#C1CFD6]'} cursor-pointer`}
-            >
-              Home
-            </a>
-            <a 
-              onClick={(e) => { e.preventDefault(); onNavigate?.('categories'); }} 
-              href="#" 
-              className={`hover:text-white transition-colors border-b-2 ${currentPage === 'categories' ? 'text-white border-[#C1CFD6]' : 'text-[#C1CFD6] border-transparent hover:border-[#C1CFD6]'} cursor-pointer`}
-            >
-              Categories
-            </a>
-            <a 
-              onClick={(e) => { e.preventDefault(); onNavigate?.('about'); }} 
-              href="#" 
-              className={`hover:text-white transition-colors border-b-2 ${currentPage === 'about' ? 'text-white border-[#C1CFD6]' : 'text-[#C1CFD6] border-transparent hover:border-[#C1CFD6]'} cursor-pointer`}
-            >
-              About Us
-            </a>
-            <a 
-              onClick={(e) => { e.preventDefault(); onNavigate?.('contact'); }} 
-              href="#" 
-              className={`hover:text-white transition-colors border-b-2 ${currentPage === 'contact' ? 'text-white border-[#C1CFD6]' : 'text-[#C1CFD6] border-transparent hover:border-[#C1CFD6]'} cursor-pointer`}
-            >
-              Contact Us
-            </a>
+            <a href="#" className="text-[#C1CFD6] hover:text-white transition-colors border-b-2 border-transparent hover:border-[#C1CFD6]">Home</a>
+            <a href="#" className="text-[#C1CFD6] hover:text-white transition-colors border-b-2 border-transparent hover:border-[#C1CFD6]">Categories</a>
+            <a href="#" className="text-[#C1CFD6] hover:text-white transition-colors border-b-2 border-transparent hover:border-[#C1CFD6]">Bestsellers</a>
+            <a href="#" className="text-[#C1CFD6] hover:text-white transition-colors border-b-2 border-transparent hover:border-[#C1CFD6]">New Arrivals</a>
           </nav>
 
           {/* Cart Button */}

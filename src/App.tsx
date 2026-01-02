@@ -5,9 +5,6 @@ import { Categories } from './components/Categories';
 import { BookCard, Book } from './components/BookCard';
 import { Cart, CartItem } from './components/Cart';
 import { Gallery } from './components/Gallery';
-import { CategoriesPage } from './components/CategoriesPage';
-import { AboutUsPage } from './components/AboutUsPage';
-import { ContactUsPage } from './components/ContactUsPage';
 import { Tabs, TabsList, TabsTrigger } from './components/ui/tabs';
 
 // Mock book data
@@ -109,7 +106,6 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('all');
-  const [currentPage, setCurrentPage] = useState('home');
 
   const handleAddToCart = (book: Book) => {
     setCartItems((prev) => {
@@ -138,11 +134,6 @@ export default function App() {
     setActiveTab('all');
   };
 
-  const handleNavigate = (page: string) => {
-    setCurrentPage(page);
-    window.scrollTo(0, 0);
-  };
-
   // Filter books
   const filteredBooks = mockBooks.filter((book) => {
     const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -163,72 +154,99 @@ export default function App() {
         cartItemsCount={totalItems}
         onCartClick={() => setIsCartOpen(true)}
         onSearchChange={setSearchQuery}
-        onNavigate={handleNavigate}
-        currentPage={currentPage}
       />
 
-      {currentPage === 'home' ? (
-        <>
-          <Hero />
+      <Hero />
 
-          <Categories onCategoryClick={handleCategoryClick} />
+      <Categories onCategoryClick={handleCategoryClick} />
 
-          {/* Gallery Section */}
-          <Gallery />
+      {/* Gallery Section */}
+      <Gallery />
 
-          {/* Footer */}
-          <footer className="bg-[#2E2E4E] text-white py-12 mt-0 border-t-4 border-[#742C36]">
-            <div className="container mx-auto px-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-                <div className="border-2 border-[#3F5461] p-4 rounded-lg">
-                  <h3 className="mb-4 text-white">About BookHaven</h3>
-                  <p className="text-gray-300 text-sm">
-                    Your trusted online bookstore for discovering and purchasing books across all genres.
-                  </p>
-                </div>
-                <div className="border-2 border-[#3F5461] p-4 rounded-lg">
-                  <h3 className="mb-4 text-white">Quick Links</h3>
-                  <ul className="space-y-2 text-sm text-gray-300">
-                    <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">About Us</a></li>
-                    <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Contact</a></li>
-                    <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">FAQs</a></li>
-                    <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Shipping Info</a></li>
-                  </ul>
-                </div>
-                <div className="border-2 border-[#3F5461] p-4 rounded-lg">
-                  <h3 className="mb-4 text-white">Categories</h3>
-                  <ul className="space-y-2 text-sm text-gray-300">
-                    <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Fiction</a></li>
-                    <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Non-Fiction</a></li>
-                    <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Children's Books</a></li>
-                    <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Academic</a></li>
-                  </ul>
-                </div>
-                <div className="border-2 border-[#3F5461] p-4 rounded-lg">
-                  <h3 className="mb-4 text-white">Customer Service</h3>
-                  <ul className="space-y-2 text-sm text-gray-300">
-                    <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Returns</a></li>
-                    <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Privacy Policy</a></li>
-                    <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Terms of Service</a></li>
-                    <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Track Order</a></li>
-                  </ul>
-                </div>
-              </div>
-              <div className="border-t-2 border-[#3F5461] mt-8 pt-8 text-center text-sm text-gray-300">
-                <p>© 2026 BookHaven. All rights reserved.</p>
-              </div>
+      {/* Books Section */}
+      <section className="py-16 container mx-auto px-4 border-b-2 border-[#C1CFD6]">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pb-4 border-b-2 border-dashed border-[#C1CFD6]">
+          <div>
+            <h2 className="text-3xl text-[#2E2E4E]">
+              {selectedCategory ? `${selectedCategory} Books` : 'Featured Books'}
+            </h2>
+            {selectedCategory && (
+              <button
+                onClick={() => setSelectedCategory(null)}
+                className="text-sm text-[#5C2E5C] hover:underline mt-1 border-b-2 border-transparent hover:border-[#5C2E5C]"
+              >
+                Clear filter
+              </button>
+            )}
+          </div>
+          
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="border-2 border-[#C1CFD6]">
+              <TabsTrigger value="all">All Books</TabsTrigger>
+              <TabsTrigger value="bestsellers">Bestsellers</TabsTrigger>
+              <TabsTrigger value="new">New Arrivals</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+
+        {filteredBooks.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="border-2 border-dashed border-[#C1CFD6] p-12 rounded-lg inline-block">
+              <p>No books found matching your criteria.</p>
             </div>
-          </footer>
-        </>
-      ) : currentPage === 'categories' ? (
-        <CategoriesPage onCategoryClick={handleCategoryClick} />
-      ) : currentPage === 'about' ? (
-        <AboutUsPage onNavigateHome={() => handleNavigate('home')} />
-      ) : currentPage === 'gallery' ? (
-        <Gallery />
-      ) : currentPage === 'contact' ? (
-        <ContactUsPage onNavigateHome={() => handleNavigate('home')} />
-      ) : null}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {filteredBooks.map((book) => (
+              <BookCard key={book.id} book={book} onAddToCart={handleAddToCart} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-[#2E2E4E] text-white py-12 mt-0 border-t-4 border-[#742C36]">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="border-2 border-[#3F5461] p-4 rounded-lg">
+              <h3 className="mb-4 text-white">About BookHaven</h3>
+              <p className="text-gray-300 text-sm">
+                Your trusted online bookstore for discovering and purchasing books across all genres.
+              </p>
+            </div>
+            <div className="border-2 border-[#3F5461] p-4 rounded-lg">
+              <h3 className="mb-4 text-white">Quick Links</h3>
+              <ul className="space-y-2 text-sm text-gray-300">
+                <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">About Us</a></li>
+                <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Contact</a></li>
+                <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">FAQs</a></li>
+                <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Shipping Info</a></li>
+              </ul>
+            </div>
+            <div className="border-2 border-[#3F5461] p-4 rounded-lg">
+              <h3 className="mb-4 text-white">Categories</h3>
+              <ul className="space-y-2 text-sm text-gray-300">
+                <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Fiction</a></li>
+                <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Non-Fiction</a></li>
+                <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Children's Books</a></li>
+                <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Academic</a></li>
+              </ul>
+            </div>
+            <div className="border-2 border-[#3F5461] p-4 rounded-lg">
+              <h3 className="mb-4 text-white">Customer Service</h3>
+              <ul className="space-y-2 text-sm text-gray-300">
+                <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Returns</a></li>
+                <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-white border-b border-transparent hover:border-white">Track Order</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t-2 border-[#3F5461] mt-8 pt-8 text-center text-sm text-gray-300">
+            <p>© 2026 BookHaven. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
 
       <Cart
         isOpen={isCartOpen}
