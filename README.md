@@ -1,7 +1,7 @@
 
-  # Book Store Website Wireframe
+  # BookHaven
 
-  This is a code bundle for Book Store Website Wireframe. The original project is available at https://www.figma.com/design/D8pIhzHIUPnKz2HbAUHiNJ/Book-Store-Website-Wireframe.
+  This is a code bundle for BookHaven. The original project is available at https://www.figma.com/design/D8pIhzHIUPnKz2HbAUHiNJ/BookHaven.
 
   ## Running the code
 
