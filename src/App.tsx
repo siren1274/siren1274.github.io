@@ -5,7 +5,12 @@ import { Categories } from './components/Categories';
 import { BookCard, Book } from './components/BookCard';
 import { Cart, CartItem } from './components/Cart';
 import { Gallery } from './components/Gallery';
+import { AboutUs } from './components/AboutUs';
+import { ContactUs } from './components/ContactUs';
 import { Tabs, TabsList, TabsTrigger } from './components/ui/tabs';
+import { Input } from './components/ui/input';
+import { Button } from './components/ui/button';
+import { Mail } from 'lucide-react';
 
 // Mock book data
 const mockBooks: Book[] = [
@@ -106,6 +111,9 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('all');
+  const [subscribeEmail, setSubscribeEmail] = useState('');
+  const [showSubscribeMessage, setShowSubscribeMessage] = useState(false);
+  const [activePage, setActivePage] = useState<'home' | 'about' | 'contact'>('home');
 
   const handleAddToCart = (book: Book) => {
     setCartItems((prev) => {
@@ -134,6 +142,17 @@ export default function App() {
     setActiveTab('all');
   };
 
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (subscribeEmail) {
+      setShowSubscribeMessage(true);
+      setSubscribeEmail('');
+      setTimeout(() => {
+        setShowSubscribeMessage(false);
+      }, 3000);
+    }
+  };
+
   // Filter books
   const filteredBooks = mockBooks.filter((book) => {
     const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -154,59 +173,105 @@ export default function App() {
         cartItemsCount={totalItems}
         onCartClick={() => setIsCartOpen(true)}
         onSearchChange={setSearchQuery}
+        onNavigate={setActivePage}
+        activePage={activePage}
       />
 
-      <Hero />
+      {activePage === 'home' ? (
+        <>
+          <Hero />
 
-      <Categories onCategoryClick={handleCategoryClick} />
+          <Categories onCategoryClick={handleCategoryClick} />
 
-      {/* Gallery Section */}
-      <Gallery />
+          {/* Gallery Section */}
+          <Gallery />
 
-      {/* Books Section */}
-      <section className="py-16 container mx-auto px-4 border-b-2 border-[#C1CFD6]">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pb-4 border-b-2 border-dashed border-[#C1CFD6]">
-          <div>
-            <h2 className="text-3xl text-[#2E2E4E]">
-              {selectedCategory ? `${selectedCategory} Books` : 'Featured Books'}
-            </h2>
-            {selectedCategory && (
-              <button
-                onClick={() => setSelectedCategory(null)}
-                className="text-sm text-[#5C2E5C] hover:underline mt-1 border-b-2 border-transparent hover:border-[#5C2E5C]"
-              >
-                Clear filter
-              </button>
-            )}
-          </div>
-          
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="border-2 border-[#C1CFD6]">
-              <TabsTrigger value="all">All Books</TabsTrigger>
-              <TabsTrigger value="bestsellers">Bestsellers</TabsTrigger>
-              <TabsTrigger value="new">New Arrivals</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-
-        {filteredBooks.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="border-2 border-dashed border-[#C1CFD6] p-12 rounded-lg inline-block">
-              <p>No books found matching your criteria.</p>
+          {/* Books Section */}
+          <section className="py-16 container mx-auto px-4 border-b-2 border-[#C1CFD6]">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pb-4 border-b-2 border-dashed border-[#C1CFD6]">
+              <div>
+                <h2 className="text-3xl text-[#2E2E4E]">
+                  {selectedCategory ? `${selectedCategory} Books` : 'Featured Books'}
+                </h2>
+                {selectedCategory && (
+                  <button
+                    onClick={() => setSelectedCategory(null)}
+                    className="text-sm text-[#5C2E5C] hover:underline mt-1 border-b-2 border-transparent hover:border-[#5C2E5C]"
+                  >
+                    Clear filter
+                  </button>
+                )}
+              </div>
+              
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <TabsList className="border-2 border-[#C1CFD6]">
+                  <TabsTrigger value="all">All Books</TabsTrigger>
+                  <TabsTrigger value="bestsellers">Bestsellers</TabsTrigger>
+                  <TabsTrigger value="new">New Arrivals</TabsTrigger>
+                </TabsList>
+              </Tabs>
             </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filteredBooks.map((book) => (
-              <BookCard key={book.id} book={book} onAddToCart={handleAddToCart} />
-            ))}
-          </div>
-        )}
-      </section>
+
+            {filteredBooks.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="border-2 border-dashed border-[#C1CFD6] p-12 rounded-lg inline-block">
+                  <p>No books found matching your criteria.</p>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {filteredBooks.map((book) => (
+                  <BookCard key={book.id} book={book} onAddToCart={handleAddToCart} />
+                ))}
+              </div>
+            )}
+          </section>
+        </>
+      ) : activePage === 'about' ? (
+        <AboutUs />
+      ) : (
+        <ContactUs />
+      )}
 
       {/* Footer */}
       <footer className="bg-[#2E2E4E] text-white py-12 mt-0 border-t-4 border-[#742C36]">
         <div className="container mx-auto px-4">
+          {/* Subscribe Section */}
+          <div className="mb-8 pb-8 border-b-2 border-[#3F5461]">
+            <div className="max-w-2xl mx-auto text-center">
+              <h3 className="mb-2 text-white" style={{ fontFamily: 'Arial, Helvetica, sans-serif', fontWeight: 'bold' }}>
+                Subscribe to Our Newsletter
+              </h3>
+              <p className="text-gray-300 text-sm mb-6" style={{ fontFamily: 'Comfortaa, cursive' }}>
+                Get the latest updates on new arrivals, special offers, and literary news.
+              </p>
+              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <div className="flex-1 relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#C1CFD6]" />
+                  <Input
+                    type="email"
+                    placeholder="Enter your email address"
+                    value={subscribeEmail}
+                    onChange={(e) => setSubscribeEmail(e.target.value)}
+                    required
+                    className="pl-10 w-full border-2 border-[#C1CFD6] bg-white text-[#2E2E4E]"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="border-2 border-[#C1CFD6] bg-[#5C2E5C] hover:bg-[#742C36] text-white px-6"
+                >
+                  Subscribe
+                </Button>
+              </form>
+              {showSubscribeMessage && (
+                <p className="mt-4 text-[#C1CFD6] border-2 border-[#C1CFD6] bg-[#3E5641] inline-block px-4 py-2 rounded" style={{ fontFamily: 'Calibri, sans-serif' }}>
+                  Thank you for subscribing!
+                </p>
+              )}
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
             <div className="border-2 border-[#3F5461] p-4 rounded-lg">
               <h3 className="mb-4 text-white">About BookHaven</h3>

@@ -7,9 +7,11 @@ interface HeaderProps {
   cartItemsCount: number;
   onCartClick: () => void;
   onSearchChange: (query: string) => void;
+  onNavigate: (page: 'home' | 'about' | 'contact') => void;
+  activePage: 'home' | 'about' | 'contact';
 }
 
-export function Header({ cartItemsCount, onCartClick, onSearchChange }: HeaderProps) {
+export function Header({ cartItemsCount, onCartClick, onSearchChange, onNavigate, activePage }: HeaderProps) {
   return (
     <header className="border-2 border-[#C1CFD6] sticky top-0 bg-[#2E2E4E] z-50">
       <div className="container mx-auto px-4 py-4">
@@ -30,10 +32,10 @@ export function Header({ cartItemsCount, onCartClick, onSearchChange }: HeaderPr
 
           {/* Navigation */}
           <nav className="hidden lg:flex items-center gap-6">
-            <a href="#" className="text-[#C1CFD6] hover:text-white transition-colors border-b-2 border-transparent hover:border-[#C1CFD6]">Home</a>
+            <a href="#" className={`text-[#C1CFD6] hover:text-white transition-colors border-b-2 border-transparent hover:border-[#C1CFD6] ${activePage === 'home' ? 'border-[#C1CFD6]' : ''}`} onClick={() => onNavigate('home')}>Home</a>
             <a href="#" className="text-[#C1CFD6] hover:text-white transition-colors border-b-2 border-transparent hover:border-[#C1CFD6]">Categories</a>
-            <a href="#" className="text-[#C1CFD6] hover:text-white transition-colors border-b-2 border-transparent hover:border-[#C1CFD6]">Bestsellers</a>
-            <a href="#" className="text-[#C1CFD6] hover:text-white transition-colors border-b-2 border-transparent hover:border-[#C1CFD6]">New Arrivals</a>
+            <a href="#" className={`text-[#C1CFD6] hover:text-white transition-colors border-b-2 border-transparent hover:border-[#C1CFD6] ${activePage === 'about' ? 'border-[#C1CFD6]' : ''}`} onClick={() => onNavigate('about')}>About Us</a>
+            <a href="#" className={`text-[#C1CFD6] hover:text-white transition-colors border-b-2 border-transparent hover:border-[#C1CFD6] ${activePage === 'contact' ? 'border-[#C1CFD6]' : ''}`} onClick={() => onNavigate('contact')}>Contact Us</a>
           </nav>
 
           {/* Cart Button */}
